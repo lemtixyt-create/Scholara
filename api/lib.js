@@ -1,6 +1,8 @@
 require('dotenv').config();
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+const GOOGLE_MODEL = process.env.GOOGLE_MODEL || 'text-bison-001';
+
 
 async function callGoogleGemini(promptText, maxOutputTokens = 1200) {
   if (!GOOGLE_API_KEY) {
@@ -8,7 +10,7 @@ async function callGoogleGemini(promptText, maxOutputTokens = 1200) {
   }
 
   const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta2/models/gemini-1.5-flash:generateText?key=${GOOGLE_API_KEY}`,
+    `https://generativelanguage.googleapis.com/v1beta2/models/${GOOGLE_MODEL}:generateText?key=${GOOGLE_API_KEY}`,
     {
       method: 'POST',
       headers: {
