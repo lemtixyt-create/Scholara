@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scholara – Smart Notes, Instantly</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23e8630a' width='100' height='100' rx='20'/><text x='50' y='70' font-size='70' font-weight='900' text-anchor='middle' fill='white' font-style='italic'>S</text></svg>" type="image/svg+xml">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#fafaf8;
+  --bg2:#f3f2ef;
+  --surface:#ffffff;
+  --surface2:#f7f6f3;
+  --border:#e0ddd8;
+  --border2:#ccc9c2;
+  --text:#1a1917;
+  --muted:#706c63;
+  --subtle:#9e9a91;
+  --accent:#e8630a;
+  --accent2:#c4500a;
+  --accent-light:#fff0e8;
+  --accent-border:#f4a06a;
+  --teal:#0a7a6e;
+  --teal-light:#e6f4f2;
+  --gold:#b8860b;
+  --green:#2d7a3a;
+  --green-light:#eaf4ec;
+  --red:#c0392b;
+  --card-shadow:0 2px 12px rgba(232,99,10,0.08);
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#131210;
+    --bg2:#1c1a17;
+    --surface:#1f1e1a;
+    --surface2:#272520;
+    --border:#2e2c27;
+    --border2:#3d3b35;
+    --text:#f0ede8;
+    --muted:#a09c93;
+    --subtle:#6b6760;
+    --accent:#f07030;
+    --accent2:#f08040;
+    --accent-light:#2a1a0d;
+    --accent-border:#8a3a10;
+    --teal:#14b8a6;
+    --teal-light:#0a2420;
+    --gold:#d4a820;
+    --green:#4ade80;
+    --green-light:#0d1f11;
+    --card-shadow:0 2px 12px rgba(0,0,0,0.3);
+  }
+}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;min-height:100vh;overflow-x:hidden}
+
+/* ── NAV ── */
+nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:13px 28px;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:200;
+}
+.brand{display:flex;align-items:center;gap:11px;cursor:pointer}
+.brand-mark{
+  width:36px;height:36px;border-radius:10px;
+  background:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:17px;color:#fff;letter-spacing:-1px;font-style:italic;
+}
+.brand-name{font-size:17px;font-weight:800;letter-spacing:-0.03em;color:var(--text)}
+.brand-tag{font-size:11px;color:var(--subtle);margin-top:1px}
+.nav-right{display:flex;align-items:center;gap:8px}
+.nav-btn{
+  background:none;border:1px solid var(--border);border-radius:20px;
+  color:var(--muted);font-size:12px;font-weight:600;
+  padding:5px 13px;cursor:pointer;transition:all 0.15s;font-family:inherit;
+}
+.nav-btn:hover{border-color:var(--border2);color:var(--text)}
+.nav-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.nav-btn.primary:hover{background:var(--accent2)}
+.nav-icon{background:none;border:none;cursor:pointer;color:var(--muted);font-size:18px;padding:4px;transition:color 0.15s}
+.nav-icon:hover{color:var(--text)}
+
+/* ── PAGES ── */
+.page{display:none}
+.page.active{display:block}
+
+/* ── HOME PAGE ── */
+.hero{text-align:center;padding:60px 20px 44px;max-width:700px;margin:0 auto}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:7px;
+  background:var(--accent-light);border:1px solid var(--accent-border);
+  border-radius:999px;padding:5px 14px;
+  font-size:12px;font-weight:700;color:var(--accent);
+  margin-bottom:24px;letter-spacing:0.02em;text-transform:uppercase;
+}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+h1{font-size:clamp(32px,6vw,56px);font-weight:900;line-height:1.1;letter-spacing:-0.035em;margin-bottom:16px}
+h1 em{font-style:normal;color:var(--accent)}
+.hero-sub{font-size:16px;color:var(--muted);line-height:1.65;max-width:460px;margin:0 auto}
+
+/* ── TAB BAR ── */
+.tab-row{
+  display:flex;gap:4px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;padding:5px;
+  max-width:740px;margin:0 auto 12px;
+  overflow-x:auto;scrollbar-width:none;
+}
+.tab-row::-webkit-scrollbar{display:none}
+.tab{
+  flex:1;min-width:78px;background:none;border:none;
+  border-radius:10px;cursor:pointer;padding:11px 6px;
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  transition:all 0.15s;font-family:inherit;color:var(--muted);
+}
+.tab:hover{background:var(--surface2);color:var(--text)}
+.tab.active{background:var(--accent-light);color:var(--accent)}
+.tab.active .tab-name{color:var(--accent)}
+.tab-icon{font-size:19px}
+.tab-name{font-size:11px;font-weight:700;white-space:nowrap}
+.tab-desc{font-size:9.5px;color:var(--subtle);text-align:center;line-height:1.3}
+.tab.active .tab-desc{color:var(--accent);opacity:0.7}
+
+/* ── INPUT CARD ── */
+.input-card{
+  max-width:740px;margin:0 auto;
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:18px;overflow:hidden;
+  transition:border-color 0.2s,box-shadow 0.2s;
+  box-shadow:var(--card-shadow);
+}
+.input-card:focus-within{border-color:var(--accent-border);box-shadow:0 0 0 3px rgba(108,78,242,0.1)}
+textarea.main-input{
+  width:100%;background:transparent;border:none;outline:none;
+  color:var(--text);font-size:15px;line-height:1.6;
+  padding:18px 20px 10px;resize:none;min-height:64px;font-family:inherit;
+}
+textarea.main-input::placeholder{color:var(--subtle)}
+.input-toolbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;flex-wrap:wrap;gap:8px;
+  border-top:1px solid var(--border);
+}
+.tleft{display:flex;align-items:center;gap:6px}
+.tright{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.chip{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:8px;color:var(--muted);
+  font-size:11.5px;font-weight:600;padding:5px 10px;cursor:pointer;
+  transition:all 0.15s;display:inline-flex;align-items:center;gap:4px;font-family:inherit;
+}
+.chip:hover{border-color:var(--border2);color:var(--text)}
+.chip.len-active{background:var(--accent-light);border-color:var(--accent-border);color:var(--accent)}
+.chip.vis-on{background:var(--teal-light);border-color:var(--teal);color:var(--teal)}
+select.grade-pick{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:8px;color:var(--muted);font-size:11.5px;font-weight:600;
+  padding:5px 24px 5px 10px;cursor:pointer;outline:none;font-family:inherit;
+  appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 8px center;
+}
+.gen-wrap{padding:0 14px 14px}
+.gen-btn{
+  width:100%;border:none;border-radius:12px;
+  background:var(--accent);color:#fff;
+  font-size:15px;font-weight:800;letter-spacing:-0.01em;
+  padding:14px;cursor:pointer;transition:all 0.2s;font-family:inherit;
+}
+.gen-btn:hover{background:var(--accent2);transform:translateY(-1px)}
+.gen-btn:active{transform:translateY(0)}
+.gen-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+
+/* ── RESULTS PAGE ── */
+#resultsPage{background:var(--bg)}
+.results-layout{
+  max-width:1100px;margin:0 auto;
+  padding:28px 20px;
+  display:grid;
+  grid-template-columns:1fr 340px;
+  gap:24px;
+  align-items:start;
+}
+@media(max-width:820px){
+  .results-layout{grid-template-columns:1fr;padding:16px}
+}
+
+/* Results top bar */
+.results-topbar{
+  max-width:1100px;margin:0 auto;
+  padding:16px 20px 0;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:10px;
+}
+.back-btn{
+  display:flex;align-items:center;gap:7px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;color:var(--muted);
+  font-size:13px;font-weight:600;padding:7px 14px;
+  cursor:pointer;transition:all 0.15s;font-family:inherit;
+}
+.back-btn:hover{border-color:var(--border2);color:var(--text)}
+.results-title-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.mode-badge{
+  background:var(--accent-light);border:1px solid var(--accent-border);
+  border-radius:999px;padding:4px 12px;
+  font-size:11px;font-weight:700;color:var(--accent);letter-spacing:0.04em;text-transform:uppercase;
+}
+.results-topic{font-size:18px;font-weight:800;letter-spacing:-0.02em;color:var(--text)}
+.regen-btn{
+  background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  color:var(--muted);font-size:12px;font-weight:600;padding:7px 13px;
+  cursor:pointer;transition:all 0.15s;font-family:inherit;
+}
+.regen-btn:hover{border-color:var(--border2);color:var(--text)}
+
+/* Main content card */
+.content-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:var(--card-shadow);
+}
+.content-card-header{
+  padding:16px 20px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.content-card-title{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em}
+.copy-btn{
+  background:none;border:1px solid var(--border);border-radius:8px;
+  color:var(--muted);font-size:12px;font-weight:600;
+  padding:5px 12px;cursor:pointer;transition:all 0.15s;font-family:inherit;
+}
+.copy-btn:hover{border-color:var(--border2);color:var(--text)}
+.copy-btn.done{color:var(--green);border-color:var(--green);background:var(--green-light)}
+
+/* Skeleton loading */
+.skeleton-body{padding:24px 24px}
+.skel-block{
+  background:linear-gradient(90deg,var(--surface2) 25%,var(--border) 50%,var(--surface2) 75%);
+  background-size:200% 100%;
+  border-radius:6px;margin-bottom:10px;
+  animation:shimmer 1.5s infinite;
+}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel-h{height:20px;width:55%}
+.skel-p{height:13px}
+.skel-p.w90{width:90%}
+.skel-p.w75{width:75%}
+.skel-p.w85{width:85%}
+.skel-p.w60{width:60%}
+.skel-img{height:160px;width:100%;border-radius:10px;margin:14px 0}
+.skel-gap{height:18px;background:none!important;animation:none!important}
+
+.loading-icon{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:40px 20px;gap:14px;
+}
+.loader-wrap{
+  width:60px;height:60px;border-radius:16px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;
+}
+.loader-ring{
+  width:32px;height:32px;
+  border:3px solid rgba(255,255,255,0.3);
+  border-top-color:#fff;
+  border-radius:50%;
+  animation:spin 0.8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-timer{font-size:13px;color:var(--muted)}
+
+/* Content body */
+.content-body{
+  padding:24px 24px;
+  font-size:14.5px;line-height:1.82;color:var(--text);
+  max-height:none;
+}
+.content-body h2{
+  font-size:17px;font-weight:800;color:var(--accent);
+  margin:24px 0 10px;padding-bottom:8px;
+  border-bottom:2px solid var(--accent-light);
+  letter-spacing:-0.01em;
+}
+.content-body h2:first-child{margin-top:0}
+.content-body h3{font-size:14.5px;font-weight:700;color:var(--text);margin:16px 0 7px}
+.content-body p{margin-bottom:11px}
+.content-body ul,.content-body ol{padding-left:22px;margin-bottom:11px}
+.content-body li{margin-bottom:6px}
+.content-body strong{color:var(--text);font-weight:700}
+.content-body em{color:var(--gold);font-style:italic}
+.content-body code{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:5px;padding:1px 6px;
+  font-family:'JetBrains Mono','Fira Code',monospace;
+  font-size:13px;color:var(--accent);
+}
+.content-body blockquote{
+  border-left:3px solid var(--accent);padding:10px 10px 10px 16px;
+  margin:12px 0;color:var(--muted);font-style:italic;
+  background:var(--accent-light);border-radius:0 8px 8px 0;
+}
+.content-body .topic-image{
+  width:100%;border-radius:12px;margin:16px 0;
+  border:1px solid var(--border);
+  display:block;object-fit:cover;max-height:280px;
+}
+.content-body .img-caption{
+  font-size:12px;color:var(--subtle);text-align:center;
+  margin-top:-10px;margin-bottom:14px;font-style:italic;
+}
+.cursor{
+  display:inline-block;width:2px;height:14px;
+  background:var(--accent);animation:cblink 0.9s infinite;
+  vertical-align:middle;margin-left:2px;
+}
+@keyframes cblink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* Sidebar */
+.sidebar{display:flex;flex-direction:column;gap:14px}
+
+.side-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;overflow:hidden;
+  box-shadow:var(--card-shadow);
+}
+.side-card-header{
+  padding:12px 16px;border-bottom:1px solid var(--border);
+  font-size:12px;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:0.05em;
+}
+.side-card-body{padding:14px 16px}
+
+/* Related topics */
+.related-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:999px;padding:5px 12px;
+  font-size:12px;font-weight:600;color:var(--muted);
+  cursor:pointer;transition:all 0.15s;margin:4px 3px;
+}
+.related-chip:hover{background:var(--accent-light);border-color:var(--accent-border);color:var(--accent)}
+
+/* Key terms */
+.term-row{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  padding:9px 0;border-bottom:1px solid var(--border);gap:10px;
+}
+.term-row:last-child{border-bottom:none;padding-bottom:0}
+.term-word{font-size:13px;font-weight:700;color:var(--accent)}
+.term-def{font-size:12px;color:var(--muted);line-height:1.5;text-align:right;max-width:60%}
+
+/* Quick facts */
+.fact-item{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:8px 0;border-bottom:1px solid var(--border);
+}
+.fact-item:last-child{border-bottom:none}
+.fact-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--accent);margin-top:5px;flex-shrink:0;
+}
+.fact-text{font-size:12.5px;color:var(--muted);line-height:1.55}
+
+/* Explain mode box */
+.explain-box{
+  background:var(--accent-light);border:1px solid var(--accent-border);
+  border-radius:12px;padding:14px 16px;margin-top:6px;
+}
+.explain-box p{font-size:13px;color:var(--muted);margin-bottom:10px}
+.explain-options{display:flex;flex-direction:column;gap:6px}
+.explain-opt{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:9px;padding:9px 14px;
+  font-size:13px;font-weight:600;color:var(--text);
+  cursor:pointer;transition:all 0.15s;text-align:left;
+  font-family:inherit;display:flex;align-items:center;gap:8px;
+}
+.explain-opt:hover{border-color:var(--accent-border);background:var(--accent-light);color:var(--accent)}
+.explain-opt.active{border-color:var(--accent);background:var(--accent-light);color:var(--accent)}
+
+/* Footer */
+.footer{
+  text-align:center;padding:40px 20px 28px;
+}
+.footer-built{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:999px;padding:7px 18px;
+  font-size:12.5px;font-weight:600;color:var(--muted);
+}
+.footer-built span{color:var(--accent);font-weight:800}
+
+/* Responsive */
+@media(max-width:560px){
+  nav{padding:11px 16px}
+  .hero{padding:40px 16px 32px}
+  h1{font-size:30px}
+  .tab{min-width:68px;padding:9px 4px}
+  .tab-name{font-size:10px}
+  .input-card{border-radius:14px}
+  .results-topbar{padding:12px 14px 0}
+  .results-topic{font-size:15px}
+  .content-body{padding:16px}
+  .side-card{border-radius:12px}
+}
+
+/* Home padding */
+.home-inner{padding:0 16px}
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <div class="brand" id="brandHome">
+    <div class="brand-mark">S</div>
+    <div>
+      <div class="brand-name">Scholara</div>
+      <div class="brand-tag">AI Study Assistant</div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <button class="nav-btn" id="historyBtn">📋 History</button>
+    <button class="nav-btn primary">Pro ✦</button>
+  </div>
+  <div id="historyDropdown" style="display:none;position:absolute;top:50px;right:28px;background:var(--surface);border:1px solid var(--border);border-radius:12px;min-width:200px;max-width:300px;box-shadow:0 8px 24px rgba(0,0,0,0.15);z-index:300;max-height:300px;overflow-y:auto">
+    <div id="historyList" style="padding:8px"></div>
+    <button id="clearHistory" style="width:100%;border:none;background:var(--surface2);border-top:1px solid var(--border);padding:10px;color:var(--muted);font-size:12px;cursor:pointer;font-family:inherit">Clear History</button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════
+     PAGE 1 — HOME
+══════════════════════════════ -->
+<div class="page active" id="homePage">
+  <div class="hero">
+    <div class="eyebrow"><span class="dot"></span> Powered by AI</div>
+    <h1>Study smarter,<br>not <em>harder</em></h1>
+    <p class="hero-sub">Enter any topic — get beautiful, structured notes, explanations, and key insights in seconds.</p>
+  </div>
+
+  <div class="home-inner">
+    <!-- TABS -->
+    <div class="tab-row" id="modeGrid">
+      <button class="tab" data-mode="study">
+        <span class="tab-icon">🎯</span>
+        <span class="tab-name">Quick Learn</span>
+        <span class="tab-desc">Complete guide</span>
+      </button>
+      <button class="tab" data-mode="cheatsheet">
+        <span class="tab-icon">⚡</span>
+        <span class="tab-name">Fast Facts</span>
+        <span class="tab-desc">Instant summary</span>
+      </button>
+      <button class="tab" data-mode="revision">
+        <span class="tab-icon">🎯</span>
+        <span class="tab-name">Test Prep</span>
+        <span class="tab-desc">Exam ready</span>
+      </button>
+      <button class="tab" data-mode="deepdive">
+        <span class="tab-icon">🔬</span>
+        <span class="tab-name">Deep Dive</span>
+        <span class="tab-desc">Advanced insights</span>
+      </button>
+      <button class="tab active" data-mode="explain">
+        <span class="tab-icon">💭</span>
+        <span class="tab-name">Simplify</span>
+        <span class="tab-desc">Your level</span>
+      </button>
+      <button class="tab" data-mode="essay">
+        <span class="tab-icon">📚</span>
+        <span class="tab-name">Research</span>
+        <span class="tab-desc">Deep analysis</span>
+      </button>
+      <button class="tab" data-mode="eli5">
+        <span class="tab-icon">🧒</span>
+        <span class="tab-name">Kid Mode</span>
+        <span class="tab-desc">Super easy</span>
+      </button>
+      <button class="tab" data-mode="cornell">
+        <span class="tab-icon">📝</span>
+        <span class="tab-name">Note Format</span>
+        <span class="tab-desc">Structured notes</span>
+      </button>
+      <button class="tab" data-mode="lecture">
+        <span class="tab-icon">🏫</span>
+        <span class="tab-name">Class Notes</span>
+        <span class="tab-desc">Lecture style</span>
+      </button>
+    </div>
+
+    <!-- Explain level picker (shows only when explain mode active) -->
+    <div id="explainPicker" style="max-width:740px;margin:0 auto 12px;display:flex;gap:8px;flex-wrap:wrap;">
+      <div style="width:100%;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:4px;padding:0 2px;text-transform:uppercase;letter-spacing:0.05em">Choose explanation level:</div>
+      <button class="explain-opt active" data-elevel="beginner" style="border-radius:999px;padding:6px 14px">🌱 Beginner</button>
+      <button class="explain-opt" data-elevel="intermediate" style="border-radius:999px;padding:6px 14px">📚 Intermediate</button>
+      <button class="explain-opt" data-elevel="advanced" style="border-radius:999px;padding:6px 14px">🔭 Advanced</button>
+      <button class="explain-opt" data-elevel="expert" style="border-radius:999px;padding:6px 14px">🏆 Expert</button>
+      <button class="explain-opt" data-elevel="analogy" style="border-radius:999px;padding:6px 14px">🎭 Analogy-based</button>
+      <button class="explain-opt" data-elevel="visual" style="border-radius:999px;padding:6px 14px">🎨 Visual / Diagram</button>
+    </div>
+
+    <!-- INPUT -->
+    <div class="input-card">
+      <textarea class="main-input" id="topicInput" placeholder="Enter a topic — e.g. Photosynthesis, French Revolution, Quantum Mechanics…" rows="2"></textarea>
+      <div class="input-toolbar">
+        <div class="tleft">
+          <button class="chip" id="multiTopicBtn" title="Combine multiple topics">📚 Multi-topic</button>
+          <button class="chip" id="compareBtn" title="Compare different topics">⚖️ Compare</button>
+        </div>
+        <div class="tright">
+          <select class="grade-pick" id="gradeSelect">
+            <option value="">Level (optional)</option>
+            <option value="grade6">Grade 6–8</option>
+            <option value="grade9">Grade 9–10</option>
+            <option value="grade11">Grade 11–12</option>
+            <option value="undergrad">Undergraduate</option>
+            <option value="postgrad">Postgraduate</option>
+          </select>
+          <button class="chip len-btn" data-len="short">⚡ Short</button>
+          <button class="chip len-btn len-active" data-len="medium">📄 Medium</button>
+          <button class="chip len-btn" data-len="detailed">🔍 Detailed</button>
+          <button class="chip vis-on" id="visualsBtn">🗺 Visuals on</button>
+        </div>
+      </div>
+      <div class="gen-wrap">
+        <button class="gen-btn" id="generateBtn">✦ Generate Notes</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-built">✦ Built by <span>Shariq</span></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     PAGE 2 — RESULTS
+══════════════════════════════ -->
+<div class="page" id="resultsPage">
+
+  <div class="results-topbar">
+    <button class="back-btn" id="backBtn">← Back</button>
+    <div class="results-title-row">
+      <span class="mode-badge" id="resModeLabel">Explain</span>
+      <span class="results-topic" id="resTopicTitle">Topic</span>
+    </div>
+    <button class="regen-btn" id="regenBtn">↻ Regenerate</button>
+  </div>
+
+  <div class="results-layout">
+    <!-- MAIN CONTENT -->
+    <div>
+      <div class="content-card" id="mainCard">
+        <div class="content-card-header">
+          <span class="content-card-title" id="cardLabel">Notes</span>
+          <button class="copy-btn" id="copyBtn">📋 Copy</button>
+        </div>
+
+        <!-- Skeleton loading -->
+        <div id="skeletonLoader">
+          <div class="loading-icon">
+            <div class="loader-wrap"><div class="loader-ring"></div></div>
+            <div class="load-timer" id="loadTimer">0s elapsed</div>
+          </div>
+          <div class="skeleton-body">
+            <div class="skel-block skel-h"></div>
+            <div class="skel-block skel-p w90"></div>
+            <div class="skel-block skel-p w75"></div>
+            <div class="skel-block skel-p w85"></div>
+            <div class="skel-block skel-img"></div>
+            <div class="skel-block skel-h" style="width:40%;margin-top:8px"></div>
+            <div class="skel-block skel-p w85"></div>
+            <div class="skel-block skel-p w60"></div>
+            <div class="skel-block skel-p w90"></div>
+            <div class="skel-gap"></div>
+            <div class="skel-block skel-h" style="width:48%"></div>
+            <div class="skel-block skel-p w75"></div>
+            <div class="skel-block skel-p w85"></div>
+          </div>
+        </div>
+
+        <!-- Real content -->
+        <div class="content-body" id="contentBody" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
+
+      <!-- Explain level (only for explain mode) -->
+      <div class="side-card" id="explainSideCard" style="display:none">
+        <div class="side-card-header">🎯 Explanation Level</div>
+        <div class="side-card-body">
+          <div class="explain-box">
+            <p>Switch how this topic is explained:</p>
+            <div class="explain-options" id="explainSideOpts">
+              <button class="explain-opt active" data-elevel="beginner">🌱 Beginner</button>
+              <button class="explain-opt" data-elevel="intermediate">📚 Intermediate</button>
+              <button class="explain-opt" data-elevel="advanced">🔭 Advanced</button>
+              <button class="explain-opt" data-elevel="expert">🏆 Expert</button>
+              <button class="explain-opt" data-elevel="analogy">🎭 Analogy-based</button>
+              <button class="explain-opt" data-elevel="visual">🎨 Visual / Diagram</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skeleton sidecards -->
+      <div class="side-card" id="skelSide1">
+        <div class="side-card-header">Key Terms</div>
+        <div class="side-card-body">
+          <div class="skel-block skel-p w90" style="margin-bottom:14px"></div>
+          <div class="skel-block skel-p w75" style="margin-bottom:14px"></div>
+          <div class="skel-block skel-p w85" style="margin-bottom:14px"></div>
+          <div class="skel-block skel-p w60"></div>
+        </div>
+      </div>
+      <div class="side-card" id="skelSide2">
+        <div class="side-card-header">Quick Facts</div>
+        <div class="side-card-body">
+          <div class="skel-block skel-p w90" style="margin-bottom:14px"></div>
+          <div class="skel-block skel-p w75" style="margin-bottom:14px"></div>
+          <div class="skel-block skel-p w85"></div>
+        </div>
+      </div>
+
+      <!-- Real sidebar cards (hidden until loaded) -->
+      <div class="side-card" id="keyTermsCard" style="display:none">
+        <div class="side-card-header">📖 Key Terms</div>
+        <div class="side-card-body" id="keyTermsBody"></div>
+      </div>
+
+      <div class="side-card" id="quickFactsCard" style="display:none">
+        <div class="side-card-header">⚡ Quick Facts</div>
+        <div class="side-card-body" id="quickFactsBody"></div>
+      </div>
+
+      <div class="side-card" id="relatedCard" style="display:none">
+        <div class="side-card-header">🔗 Related Topics</div>
+        <div class="side-card-body" id="relatedBody"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-built">✦ Built by <span>Shariq</span></div>
+  </div>
+</div>
+
+<script>
+// ── STATE ──
+let selectedMode = 'explain';
+let selectedLen = 'medium';
+let visualsOn = true;
+let selectedELevel = 'beginner';
+let currentTopic = '';
+let generatedText = '';
+let timerInterval = null;
+let timerSecs = 0;
+let searchHistory = JSON.parse(localStorage.getItem('scholara_history')) || [];
+const BACKEND_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : '/api';
+
+const modeLabels = {
+  study:'Quick Learn', cheatsheet:'Fast Facts', revision:'Test Prep',
+  deepdive:'Deep Dive', explain:'Simplify', essay:'Research',
+  eli5:'Kid Mode', cornell:'Note Format', lecture:'Class Notes'
+};
+
+// ── TABS ──
+document.querySelectorAll('#modeGrid .tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('#modeGrid .tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    selectedMode = tab.dataset.mode;
+    document.getElementById('explainPicker').style.display =
+      selectedMode === 'explain' ? 'flex' : 'none';
+  });
+});
+
+// ── EXPLAIN LEVEL (home) ──
+document.querySelectorAll('#explainPicker .explain-opt').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#explainPicker .explain-opt').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedELevel = btn.dataset.elevel;
+    // sync sidebar
+    document.querySelectorAll('#explainSideOpts .explain-opt').forEach(b => {
+      b.classList.toggle('active', b.dataset.elevel === selectedELevel);
+    });
+  });
+});
+
+// ── EXPLAIN LEVEL (sidebar) ──
+document.querySelectorAll('#explainSideOpts .explain-opt').forEach(btn => {
+  btn.addEventListener('click', () => {
+    selectedELevel = btn.dataset.elevel;
+    document.querySelectorAll('#explainSideOpts .explain-opt').forEach(b =>
+      b.classList.toggle('active', b.dataset.elevel === selectedELevel));
+    document.querySelectorAll('#explainPicker .explain-opt').forEach(b =>
+      b.classList.toggle('active', b.dataset.elevel === selectedELevel));
+    if (currentTopic) triggerGenerate();
+  });
+});
+
+// ── LENGTH ──
+document.querySelectorAll('.len-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.len-btn').forEach(b => b.classList.remove('len-active'));
+    btn.classList.add('len-active');
+    selectedLen = btn.dataset.len;
+  });
+});
+
+// ── VISUALS ──
+const visualsBtn = document.getElementById('visualsBtn');
+visualsBtn.addEventListener('click', () => {
+  visualsOn = !visualsOn;
+  visualsBtn.textContent = visualsOn ? '🗺 Visuals on' : '🗺 Visuals off';
+  visualsBtn.classList.toggle('vis-on', visualsOn);
+});
+
+// ── GENERATE ──
+// ── HISTORY ──
+function addToHistory(topic) {
+  if (!searchHistory.includes(topic)) {
+    searchHistory.unshift(topic);
+    if (searchHistory.length > 20) searchHistory.pop();
+    localStorage.setItem('scholara_history', JSON.stringify(searchHistory));
+  }
+}
+
+function renderHistory() {
+  const historyList = document.getElementById('historyList');
+  if (searchHistory.length === 0) {
+    historyList.innerHTML = '<div style="padding:12px;color:var(--muted);font-size:13px;text-align:center">No history yet</div>';
+    return;
+  }
+  historyList.innerHTML = searchHistory.map(topic =>
+    `<button style="display:block;width:100%;text-align:left;padding:10px 12px;background:none;border:1px solid var(--border);border-radius:8px;color:var(--text);cursor:pointer;font-size:13px;margin-bottom:6px;font-family:inherit;transition:all 0.15s" onclick="loadHistoryItem('${topic.replace(/'/g, "\\'")}')">🔍 ${topic}</button>`
+  ).join('');
+}
+
+function loadHistoryItem(topic) {
+  document.getElementById('topicInput').value = topic;
+  document.getElementById('historyDropdown').style.display = 'none';
+  currentTopic = topic;
+  showResultsPage();
+  triggerGenerate();
+}
+
+document.getElementById('historyBtn').addEventListener('click', () => {
+  const dropdown = document.getElementById('historyDropdown');
+  dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+  if (dropdown.style.display === 'block') renderHistory();
+});
+
+document.getElementById('clearHistory').addEventListener('click', () => {
+  if (confirm('Clear all history?')) {
+    searchHistory = [];
+    localStorage.removeItem('scholara_history');
+    document.getElementById('historyDropdown').style.display = 'none';
+  }
+});
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#historyBtn') && !e.target.closest('#historyDropdown')) {
+    document.getElementById('historyDropdown').style.display = 'none';
+  }
+});
+
+document.getElementById('generateBtn').addEventListener('click', () => {
+  const topic = document.getElementById('topicInput').value.trim();
+  if (!topic) { document.getElementById('topicInput').focus(); return; }
+  currentTopic = topic;
+  addToHistory(topic);
+  showResultsPage();
+  triggerGenerate();
+});
+
+// ── MULTI-TOPIC ──
+document.getElementById('multiTopicBtn').addEventListener('click', () => {
+  const input = document.getElementById('topicInput');
+  if (!input.value.trim()) return;
+  input.value = input.value.trim() + ' + ';
+  input.focus();
+  input.setSelectionRange(input.value.length, input.value.length);
+});
+
+// ── COMPARE ──
+document.getElementById('compareBtn').addEventListener('click', () => {
+  const input = document.getElementById('topicInput');
+  if (!input.value.trim()) return;
+  input.value = input.value.trim() + ' vs ';
+  input.focus();
+  input.setSelectionRange(input.value.length, input.value.length);
+});
+
+document.getElementById('topicInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) document.getElementById('generateBtn').click();
+});
+
+// ── BACK ──
+document.getElementById('backBtn').addEventListener('click', showHomePage);
+document.getElementById('brandHome').addEventListener('click', showHomePage);
+
+// ── REGEN ──
+document.getElementById('regenBtn').addEventListener('click', () => {
+  if (currentTopic) triggerGenerate();
+});
+
+// ── COPY ──
+document.getElementById('copyBtn').addEventListener('click', async () => {
+  if (!generatedText) return;
+  await navigator.clipboard.writeText(generatedText).catch(() => {});
+  const btn = document.getElementById('copyBtn');
+  btn.textContent = '✓ Copied!'; btn.classList.add('done');
+  setTimeout(() => { btn.textContent = '📋 Copy'; btn.classList.remove('done'); }, 2000);
+});
+
+function showHomePage() {
+  document.getElementById('homePage').classList.add('active');
+  document.getElementById('resultsPage').classList.remove('active');
+  clearInterval(timerInterval);
+}
+
+function showResultsPage() {
+  document.getElementById('homePage').classList.remove('active');
+  document.getElementById('resultsPage').classList.add('active');
+  // update topbar
+  document.getElementById('resModeLabel').textContent = modeLabels[selectedMode];
+  document.getElementById('resTopicTitle').textContent = currentTopic;
+  document.getElementById('cardLabel').textContent = modeLabels[selectedMode];
+  // show/hide explain sidebar card
+  document.getElementById('explainSideCard').style.display =
+    selectedMode === 'explain' ? 'block' : 'none';
+  // reset to skeleton
+  document.getElementById('skeletonLoader').style.display = 'block';
+  document.getElementById('contentBody').style.display = 'none';
+  document.getElementById('contentBody').innerHTML = '';
+  document.getElementById('keyTermsCard').style.display = 'none';
+  document.getElementById('quickFactsCard').style.display = 'none';
+  document.getElementById('relatedCard').style.display = 'none';
+  document.getElementById('skelSide1').style.display = 'block';
+  document.getElementById('skelSide2').style.display = 'block';
+  // start timer
+  timerSecs = 0;
+  document.getElementById('loadTimer').textContent = '0s elapsed';
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    timerSecs++;
+    document.getElementById('loadTimer').textContent = timerSecs + 's elapsed';
+  }, 1000);
+  window.scrollTo(0, 0);
+}
+
+async function triggerGenerate() {
+  // reset content
+  document.getElementById('skeletonLoader').style.display = 'block';
+  document.getElementById('contentBody').style.display = 'none';
+  document.getElementById('contentBody').innerHTML = '';
+  document.getElementById('keyTermsCard').style.display = 'none';
+  document.getElementById('quickFactsCard').style.display = 'none';
+  document.getElementById('relatedCard').style.display = 'none';
+  document.getElementById('skelSide1').style.display = 'block';
+  document.getElementById('skelSide2').style.display = 'block';
+  timerSecs = 0;
+  document.getElementById('loadTimer').textContent = '0s elapsed';
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    timerSecs++;
+    document.getElementById('loadTimer').textContent = timerSecs + 's elapsed';
+  }, 1000);
+
+  const grade = document.getElementById('gradeSelect').value;
+  const prompt = buildPrompt(currentTopic, selectedMode, selectedLen, grade, visualsOn, selectedELevel);
+
+  try {
+    const response = await fetch(`${BACKEND_URL}/generate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        topic: currentTopic,
+        mode: selectedMode,
+        length: selectedLen,
+        grade: grade,
+        visuals: visualsOn,
+        explanation_level: selectedELevel
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Backend error: ${response.statusText}`);
+    }
+
+    clearInterval(timerInterval);
+    document.getElementById('skeletonLoader').style.display = 'none';
+    document.getElementById('contentBody').style.display = 'block';
+    document.getElementById('skelSide1').style.display = 'none';
+    document.getElementById('skelSide2').style.display = 'none';
+
+    const data = await response.json();
+    const fullText = data.content;
+
+    generatedText = fullText;
+    document.getElementById('contentBody').innerHTML = renderMarkdown(fullText);
+    generateSidebar(currentTopic, fullText);
+
+  } catch (err) {
+    clearInterval(timerInterval);
+    document.getElementById('skeletonLoader').style.display = 'none';
+    document.getElementById('contentBody').style.display = 'block';
+    document.getElementById('skelSide1').style.display = 'none';
+    document.getElementById('skelSide2').style.display = 'none';
+    document.getElementById('contentBody').innerHTML =
+      `<p style="color:var(--red)">⚠️ Error generating. Please try again.</p><small style="color:var(--muted)">${err.message}</small>`;
+  }
+}
+
+// ── SIDEBAR GENERATION ──
+async function generateSidebar(topic, mainText) {
+  try {
+    const res = await fetch(`${BACKEND_URL}/sidebar`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        topic: topic
+      })
+    });
+
+    if (!res.ok) {
+      throw new Error('Failed to generate sidebar');
+    }
+
+    const result = await res.json();
+    const parsed = result.data;
+
+    // Key terms
+    const termsHtml = parsed.terms.map(t =>
+      `<div class="term-row"><span class="term-word">${t.word}</span><span class="term-def">${t.def}</span></div>`
+    ).join('');
+    document.getElementById('keyTermsBody').innerHTML = termsHtml;
+    document.getElementById('keyTermsCard').style.display = 'block';
+
+    // Quick facts
+    const factsHtml = parsed.facts.map(f =>
+      `<div class="fact-item"><div class="fact-dot"></div><div class="fact-text">${f}</div></div>`
+    ).join('');
+    document.getElementById('quickFactsBody').innerHTML = factsHtml;
+    document.getElementById('quickFactsCard').style.display = 'block';
+
+    // Related
+    const relHtml = parsed.related.map(r =>
+      `<button class="related-chip" onclick="loadRelated('${r.replace(/'/g, "\\'")}')">🔗 ${r}</button>`
+    ).join('');
+    document.getElementById('relatedBody').innerHTML = relHtml;
+    document.getElementById('relatedCard').style.display = 'block';
+
+  } catch(e) {
+    console.error('Sidebar generation error:', e);
+    document.getElementById('skelSide1').style.display = 'none';
+    document.getElementById('skelSide2').style.display = 'none';
+  }
+}
+
+function loadRelated(topic) {
+  currentTopic = topic;
+  document.getElementById('resTopicTitle').textContent = topic;
+  triggerGenerate();
+}
+
+// ── PROMPTS ──
+function buildPrompt(topic, mode, len, grade, visuals, elevel) {
+  const gradeNote = grade ? `Target level: ${grade}.` : '';
+  const lenNote = {short:'Keep it concise (300-400 words).',medium:'Medium length (600-800 words).',detailed:'Be thorough and detailed (900-1000 words).'}[len];
+  const visualNote = visuals ? 'Include ASCII diagrams, flowcharts, or structured visual aids where helpful. Use text art to show processes, cycles, or structures.' : '';
+
+  const eLevelMap = {
+    beginner:'Explain for a complete beginner with no prior knowledge. Use very simple words, everyday analogies, and relatable examples.',
+    intermediate:'Explain for someone with basic knowledge. Build on fundamentals, introduce proper terminology with clear definitions.',
+    advanced:'Explain at an advanced level. Use technical terminology, discuss nuances, complexities, and edge cases.',
+    expert:'Explain at expert/academic level. Include theoretical depth, critical analysis, current research perspectives, and advanced applications.',
+    analogy:'Explain entirely through clever analogies and metaphors. Make abstract concepts concrete through vivid real-world comparisons.',
+    visual:'Explain using lots of visual structures: ASCII diagrams, flowcharts, tables, timelines, numbered processes, and structured layouts.'
+  };
+
+  const modePrompts = {
+    study:`Create comprehensive study notes on "${topic}". Include key concepts, definitions, examples, and analogies. Use clear headings, bullet points, and examples.`,
+    cheatsheet:`Create a concise cheat sheet on "${topic}". Include key formulas, facts, terms, and essential points in a scannable format.`,
+    revision:`Create a quick revision summary of "${topic}" for someone about to take a test. Include most important points, memory tricks, and likely exam questions.`,
+    deepdive:`Create expert-level deep dive notes on "${topic}". Include advanced concepts, nuances, edge cases, connections to related topics.`,
+    explain:`Explain "${topic}". ${eLevelMap[elevel]||eLevelMap.beginner} Include real-world examples, applications, and if helpful, visual diagrams.`,
+    essay:`Create essay research notes on "${topic}". Include key arguments, counterarguments, important thinkers/sources, evidence, and essay structure.`,
+    eli5:`Explain "${topic}" like I'm 5 years old. Use very simple language, fun analogies, and examples a child would understand.`,
+    cornell:`Create Cornell Notes for "${topic}". Format: Key Questions (left), Detailed Notes (right), Summary (bottom).`,
+    lecture:`Create organized lecture-style notes for "${topic}". Structure with introduction, main topics, sub-points, examples, and summary.`
+  };
+
+  return `${modePrompts[mode]||modePrompts.study}
+
+${gradeNote} ${lenNote} ${visualNote}
+
+Use markdown formatting: ## for main headings, ### for sub-headings, **bold** for key terms, *italic* for emphasis, bullet points, and numbered lists where appropriate. Make it visually rich and easy to study from. Where relevant, include a practical example or real-world application section.`;
+}
+
+// ── MARKDOWN RENDERER ──
+function renderMarkdown(text) {
+  return text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/^## (.+)$/gm,'<h2>$1</h2>')
+    .replace(/^### (.+)$/gm,'<h3>$1</h3>')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/`(.+?)`/g,'<code>$1</code>')
+    .replace(/^> (.+)$/gm,'<blockquote>$1</blockquote>')
+    .replace(/^- (.+)$/gm,'<li>$1</li>')
+    .replace(/^(\d+)\. (.+)$/gm,'<li>$2</li>')
+    .replace(/(<li>.*<\/li>\n?)+/g,m=>`<ul>${m}</ul>`)
+    .replace(/\n\n/g,'</p><p>')
+    .replace(/^(?!<[h|u|b|l|p|c])(.+)$/gm,'<p>$1</p>')
+    .replace(/<p><\/p>/g,'')
+    .replace(/<p>(<h[23]>)/g,'$1')
+    .replace(/(<\/h[23]>)<\/p>/g,'$1');
+}
+</script>
+</body>
+</html>
