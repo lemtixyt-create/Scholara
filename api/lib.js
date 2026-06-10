@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
-const GOOGLE_MODEL = process.env.GOOGLE_MODEL || 'text-bison-001';
+const GOOGLE_MODEL = process.env.GOOGLE_MODEL || 'gemini-pro';
 
 
 async function callGoogleGemini(promptText, maxOutputTokens = 1200) {
@@ -10,18 +10,22 @@ async function callGoogleGemini(promptText, maxOutputTokens = 1200) {
   }
 
   const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta2/models/${GOOGLE_MODEL}:generateText?key=${GOOGLE_API_KEY}`,
+    `https://generativelanguage.googleapis.com/v1beta1/models/${GOOGLE_MODEL}:generateContent?key=${GOOGLE_API_KEY}`,
     {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        prompt: {
-          text: promptText
-        },
-        temperature: 0.2,
-        maxOutputTokens
+        contents: [{
+          parts: [{
+            text: promptText
+          }]
+        }],
+        generationConfig: {
+          temperature: 0.2,
+          maxOutputTokens
+        }
       })
     }
   );
@@ -32,7 +36,7 @@ async function callGoogleGemini(promptText, maxOutputTokens = 1200) {
   }
 
   const data = await response.json();
-  return data.candidates?.[0]?.output ?? '';
+  return data.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
 }
 
 function buildPrompt(topic, mode, len, grade, visuals, elevel) {
