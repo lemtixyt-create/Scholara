@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
-const GOOGLE_MODEL = process.env.GOOGLE_MODEL || 'gemini-pro';
+const GOOGLE_MODEL = process.env.GOOGLE_MODEL || 'gemini-1.5-flash';
 
 
 async function callGoogleGemini(promptText, maxOutputTokens = 1200) {
